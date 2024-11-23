@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tradutor Pirate Speak</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f9f9f9;
+      text-align: center;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #translationResult {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tradutor para Pirate Speak</h1>
+  <p>Digite um texto abaixo e veja a tradução em estilo pirata!</p>
+  <textarea id="textInput" placeholder="Digite seu texto aqui..."></textarea>
+  <br>
+  <button onclick="translateToPirate()">Traduzir para Pirata</button>
+  <div id="translationResult"></div>
+
+  <script>
+    const apiKey = "https://api.funtranslations.com/translate/";
+    const baseUrl = "https://api.funtranslations.com/translate/pirate.json";
+
+    async function translateToPirate() {
+      const textInput = document.getElementById("textInput").value;
+      const resultContainer = document.getElementById("translationResult");
+
+      if (!textInput.trim()) {
+        resultContainer.innerHTML = "Por favor, insira um texto para traduzir.";
+        return;
+      }
+
+      resultContainer.innerHTML = "Traduzindo...";
+
+      try {
+        const response = await fetch(`${baseUrl}?text=${encodeURIComponent(textInput)}&api_key=${apiKey}`);
+        if (!response.ok) {
+          throw new Error("Erro na tradução. Verifique a chave da API ou limite diário.");
+        }
+
+        const data = await response.json();
+        const translatedText = data.contents.translated;
+
+        resultContainer.innerHTML = `Tradução: ${translatedText}`;
+      } catch (error) {
+        resultContainer.innerHTML = "Erro ao traduzir o texto. Tente novamente mais tarde.";
+      }
+    }
+  </script>
+</body>
+</html>
